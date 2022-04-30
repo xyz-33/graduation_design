@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QTextStream>
+#include <QProcess>
 
 namespace Ui {
 class MainWindow;
@@ -26,6 +27,7 @@ public:
     void get_SolverE_Boundarycondition(int boundaryNumber, QStringList& typeList, QStringList& indexList, QStringList& coefList);
     void write_BoundaryCondition_intoFile(QTextStream& in, int boundaryNumber, QStringList& typeList, QStringList& indexList, QStringList& coefList);
     bool chooseToQuit(QString questionText);
+    void displayOutput(QProcess* m_process);
     ~MainWindow();
 
 private slots:
@@ -44,6 +46,10 @@ private slots:
     void on_action_createInputFile_triggered();
 
     void on_actionTimeControl_triggered();
+
+    void on_actionRunProgram_triggered();
+
+    void on_actionDrawSimulationGraph_triggered();
 
 private:
     Ui::MainWindow *ui;

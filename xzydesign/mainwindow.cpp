@@ -762,6 +762,52 @@ void MainWindow::on_actionTimeControl_triggered()
 
 }
 
+//点击菜单栏的程序运行->运行
+void MainWindow::on_actionRunProgram_triggered()
+{
+
+    QMessageBox::information(this,"提示","请选择想要执行的程序");
+    QString programName = QFileDialog::getOpenFileName(this,"选择程序",
+                                                    "/home/Dev",
+                                                    "",
+                                                    nullptr,
+                                                    QFileDialog::DontUseNativeDialog);
+    if(programName.isEmpty() || programName.isNull()){
+        QMessageBox::information(this,"提示","将回到主页面,请重新输入并选择");
+        return;
+    }
+    //选择.input文件
+    QMessageBox::information(this,"提示","请选择程序所需的.input文件");
+    QString inputFileName = QFileDialog::getOpenFileName(this,"选择.input文件",
+                                                    "/home/Dev",
+                                                    ".input文件(*.input)",
+                                                    nullptr,
+                                                    QFileDialog::DontUseNativeDialog);
+    if(inputFileName.isEmpty() || inputFileName.isNull()){
+        QMessageBox::information(this,"提示","将回到主页面,请重新选择");
+        return;
+    }
+
+    QString command = QString("%1 %2").arg(programName).arg(inputFileName);
+    QProcess* m_process = new QProcess();
+    m_process->setProcessChannelMode(QProcess::MergedChannels);
+    connect(m_process , &QProcess::readyReadStandardOutput , this , [=]()
+                                                                    {
+                                                                        MainWindow::displayOutput(m_process);
+                                                                    });
+    m_process->start("bash", QStringList()<<"-c"<<command);
+    if (!m_process->waitForStarted()) {
+        qDebug() << "start failed:" << m_process->errorString();
+    } else {
+        qDebug() << "start success:";
+    }
+}
+
+void MainWindow::displayOutput(QProcess* m_process){
+    //qDebug() << m_process->readAllStandardOutput().data();
+    ui->displayConsoleOutput->setPlainText(QString::fromUtf8(m_process->readAllStandardOutput().data()));
+}
+
 //该函数会弹出一个选择yes或no的提示框，如果选no了返回true，表示要退出
 bool MainWindow::chooseToQuit(QString questionText){
     QMessageBox::StandardButton reply;
@@ -776,3 +822,22 @@ bool MainWindow::chooseToQuit(QString questionText){
 }
 
 
+
+
+
+void MainWindow::on_actionDrawSimulationGraph_triggered()
+{
+    QString command = "/opt/teravap2.6.0/bin/teravap";
+    QProcess* m_process = new QProcess();
+    m_process->setProcessChannelMode(QProcess::MergedChannels);
+    connect(m_process , &QProcess::readyReadStandardOutput , this , [=]()
+                                                                    {
+                                                                        MainWindow::displayOutput(m_process);
+                                                                    });
+    m_process->start("bash", QStringList()<<"-c"<<command);
+    if (!m_process->waitForStarted()) {
+        qDebug() << "start failed:" << m_process->errorString();
+    } else {
+        qDebug() << "start success:";
+    }
+}
