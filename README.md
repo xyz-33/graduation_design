@@ -1,6 +1,6 @@
 # multiphysics_simulation_software
 
-## A simulation software that can calcute thermal, electromagnetic and stress problem
+## A simulation software that can calculate thermal, electromagnetic and stress problem
 
 ### Demo video
 
